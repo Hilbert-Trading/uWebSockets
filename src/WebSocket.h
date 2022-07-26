@@ -25,6 +25,8 @@ protected:
 
     void *slidingDeflateWindow = nullptr;
 
+    std::chrono::high_resolution_clock::time_point pingTp;
+
     WebSocket(bool perMessageDeflate, bool serverNoContextTakeover, uS::Socket *socket);
 
     static uS::Socket *onData(uS::Socket *s, char *data, size_t length);
@@ -76,6 +78,9 @@ public:
     static PreparedMessage *prepareMessage(char *data, size_t length, OpCode opCode, bool compressed, void(*callback)(WebSocket<isServer> *webSocket, void *data, bool cancelled, void *reserved) = nullptr);
     static PreparedMessage *prepareMessageBatch(std::vector<std::string> &messages, std::vector<int> &excludedMessages,
                                                 OpCode opCode, bool compressed, void(*callback)(WebSocket<isServer> *webSocket, void *data, bool cancelled, void *reserved) = nullptr);
+    
+    std::chrono::high_resolution_clock::time_point getPingTp() const { return pingTp; }
+    void setPingTp() { pingTp = std::chrono::high_resolution_clock::now(); }
 
     friend struct Hub;
     friend struct Group<isServer>;
