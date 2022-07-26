@@ -90,7 +90,7 @@ public:
     }
 
     template <uS::Socket *I(Socket *s), void C(Socket *p, bool error)>
-    Socket *connect(const char *hostname, int port, bool secure, NodeData *nodeData) {
+    Socket *connect(const char *hostname, in_addr_t* addr, uint16_t port, bool secure, NodeData *nodeData) {
         Context *netContext = nodeData->netContext;
 
         addrinfo hints, *result;
@@ -100,6 +100,7 @@ public:
         if (getaddrinfo(hostname, std::to_string(port).c_str(), &hints, &result) != 0) {
             return nullptr;
         }
+        *addr = ((sockaddr_in *)result->ai_addr)->sin_addr.s_addr;
 
         uv_os_sock_t fd = netContext->createSocket(result->ai_family, result->ai_socktype, result->ai_protocol);
         if (fd == INVALID_SOCKET) {
