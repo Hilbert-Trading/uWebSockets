@@ -1,9 +1,12 @@
+UNAME := $(shell uname)
 W        = -Wall
 OPT      = -O2
 STD      = -std=c++17
 INCS     = -Isrc/
-LDFLAGS  = -luv -lssl -lz -lcrypto
-CXXFLAGS = $(STD) $(OPTS) $(W) -fPIC $(XCXXFLAGS) $(INCS)
+ifeq ($(UNAME), Darwin)
+	LDFLAGS  = -luv -lssl -lz -lcrypto
+endif
+CXXFLAGS = $(STD) $(OPT) $(W) -fPIC $(XCXXFLAGS) $(INCS)
 INCS     = -Isrc/
 
 SRCS = src/Extensions.cpp src/Group.cpp src/Networking.cpp src/Hub.cpp src/Node.cpp src/WebSocket.cpp src/HTTPSocket.cpp src/Socket.cpp src/Epoll.cpp src/Room.cpp
